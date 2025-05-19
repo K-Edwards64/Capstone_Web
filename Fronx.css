@@ -16,6 +16,7 @@ h2{
 
 /* Add a black background color to the top navigation */
 .topnav {
+    text-align: center;
     background-color: #333;
     overflow: hidden;
   }
