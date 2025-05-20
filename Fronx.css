@@ -23,7 +23,7 @@ h2{
   
   /* Style the links inside the navigation bar */
   .topnav a {
-    float: left;
+    float: center;
     display: block;
     color: #f2f2f2;
     text-align: center;
@@ -34,13 +34,13 @@ h2{
   
   /* Change the color of links on hover */
   .topnav a:hover {
-    background-color: #ddd;
+    background-color: beige;
     color: black;
   }
   
   /* Add an active class to highlight the current page */
   .topnav a.active {
-    background-color: #04AA6D;
+    background-color: brown;
     color: white;
   }
   
