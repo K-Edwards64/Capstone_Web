@@ -23,7 +23,7 @@ h2{
   
   /* Style the links inside the navigation bar */
   .topnav a {
-    float: center;
+    float: middle;
     display: block;
     color: #f2f2f2;
     text-align: center;
