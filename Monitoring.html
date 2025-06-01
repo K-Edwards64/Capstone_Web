@@ -55,7 +55,7 @@
             tableBody.innerHTML = '';
             
             try {
-                const response = await fetch('http://150.136.162.229/plates');
+                const response = await fetch('http://150.136.162.229:8000/plates');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
