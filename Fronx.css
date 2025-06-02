@@ -19,6 +19,11 @@ h3{
   color: brown;
   border: 5px ridge brown;
 }
+
+p{
+  text-align: center;
+}
+
 /* Add a black background color to the top navigation */
 .topnav {
     text-align: center;
