@@ -50,13 +50,7 @@
             </tbody>
         </table>
 
-        <!-- Delete All Button -->
-        <div class="form-group">
-            <button class="btn btn-delete" onclick="deleteAllPlates()">
-                <i class="fa fa-trash"></i> Delete All Detected Plates
-            </button>
-            <span id="deleteStatus"></span>
-        </div>
+
         </div>
     </div>
     <!-- Section for displaying matching license plates -->
@@ -130,36 +124,6 @@
 
         // Refresh every 30s
         setInterval(loadMatchingPlates, 30000);
-
-        async function deleteAllPlates() {
-            if (!confirm('WARNING: This will delete ALL detected plates. Continue?')) {
-                return;
-            }
-
-            const statusElement = document.getElementById('deleteStatus');
-            statusElement.textContent = 'Deleting...';
-            statusElement.style.color = 'blue';
-            
-            try {
-                const response = await fetch('http://150.136.162.229:8000/number-plates', {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) throw new Error('Failed to delete plates');
-                
-                statusElement.textContent = 'All detected plates deleted!';
-                statusElement.style.color = 'black';
-                fetchAuthorizedPlates();
-            } catch (error) {
-                console.error('Error:', error);
-                statusElement.textContent = 'Error: ' + error.message;
-                statusElement.style.color = 'red';
-            } finally {
-                setTimeout(() => {
-                    statusElement.textContent = '';
-                }, 3000);
-            }
-        }
     </script>
 
 </body>
