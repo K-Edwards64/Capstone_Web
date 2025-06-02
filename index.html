@@ -92,7 +92,7 @@
             tableBody.innerHTML = '<tr><td colspan="5">Loading data...</td></tr>';
             
             try {
-                const response = await fetch('http://150.136.162.229:8000');
+                const response = await fetch('http://150.136.162.229:8000/matching-plates');
                 if (!response.ok) throw new Error('Network response was not ok');
                 
                 const plates = await response.json();
