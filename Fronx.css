@@ -11,9 +11,14 @@ h1{
 h2{
     text-align: center;
     color: brown;
-    border: 10px inset brown;
+    border: 8px outset brown;
 }
 
+h3{
+  text-align: center;
+  color: brown;
+  border: 5px ridge brown;
+}
 /* Add a black background color to the top navigation */
 .topnav {
     text-align: center;
@@ -77,4 +82,140 @@ h2{
 }
 .refresh-btn:hover {
     background-color: #8B4513;
+}
+
+/* Content Styling */
+.content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.refresh-controls {
+    margin: 20px 0;
+}
+
+/*Area for Matching Plates Table*/
+
+/* Table Styling */
+.plate-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.plate-table th, .plate-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.plate-table th {
+    background-color: brown;
+    color: white;
+}
+
+.plate-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.plate-table tr:hover {
+    background-color: #ddd;
+}
+
+/*Section for matching plates*/
+
+/* Content Styling */
+.content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.refresh-controls {
+  margin: 20px 0;
+}
+
+.refresh-btn {
+  background-color: brown;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.refresh-btn:hover {
+  background-color: black;
+}
+
+/* Table Styling */
+.plate-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.plate-table th, .plate-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.plate-table th {
+  background-color: brown;
+  color: white;
+}
+
+.plate-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.plate-table tr:hover {
+  background-color: #ddd;
+}
+
+
+/*Section for configuration page: Adding the authorized plates/
+/* Additional styling for authorized plates section */
+.authorized-plates {
+  margin: 20px;
+  padding: 20px;
+  border: 2px solid whitesmoke;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.form-group input {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-add {
+  background-color: brown;
+  color: white;
+}
+.btn-delete {
+  background-color: brown;
+  color: white;
+  margin-left: 10px;
+}
+.btn:hover {
+  opacity: 0.8;
 }

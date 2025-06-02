@@ -22,6 +22,45 @@
         </a>
       </div>
 
+      <div class="authorized-plates">
+      <!-- Section for displaying matching license plates -->
+      <div class="content">
+        <h2>Authorized Vehicles Detected</h2>
+        <div class="refresh-controls">
+            <button onclick="loadMatchingPlates()" class="refresh-btn">
+                <i class="fa fa-refresh"></i> Refresh List
+            </button>
+            <span id="loading" style="display:none; margin-left:10px;">
+                <i class="fa fa-spinner fa-spin"></i> Loading...
+            </span>
+        </div>
+        <h3>Authorized Plates Detected</h3>
+        <table class="plate-table">
+            <thead>
+                <tr>
+                    <th>Plate Number</th>
+                    <th>Vehicle Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Track ID</th>
+                </tr>
+            </thead>
+            <tbody id="matchingPlatesList">
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Delete All Button -->
+        <div class="form-group">
+            <button class="btn btn-delete" onclick="deleteAllPlates()">
+                <i class="fa fa-trash"></i> Delete All Detected Plates
+            </button>
+            <span id="deleteStatus"></span>
+        </div>
+        </div>
+    </div>
+    <!-- Section for displaying matching license plates -->
+
 
       <script>      
 
@@ -47,6 +86,80 @@
             }
         }
         //Area for navigation bar function
+
+        // Load matching plates when page loads
+        document.addEventListener('DOMContentLoaded', loadMatchingPlates);
+    
+        async function loadMatchingPlates() {
+            const tableBody = document.getElementById('matchingPlatesList');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'inline-block';
+            tableBody.innerHTML = '<tr><td colspan="5">Loading data...</td></tr>';
+            
+            try {
+                const response = await fetch('http://150.136.162.229:8000');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const plates = await response.json();
+                
+                if (plates.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5">No authorized vehicles detected</td></tr>';
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                plates.forEach(plate => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${plate.numberplate || 'N/A'}</td>
+                        <td>${plate.class_name || 'N/A'}</td>
+                        <td>${plate.date || 'N/A'}</td>
+                        <td>${plate.time || 'N/A'}</td>
+                        <td>${plate.track_id || 'N/A'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                tableBody.innerHTML = '<tr><td colspan="5">Error loading data. Please try again.</td></tr>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Refresh every 30s
+        setInterval(loadMatchingPlates, 30000);
+
+        async function deleteAllPlates() {
+            if (!confirm('WARNING: This will delete ALL detected plates. Continue?')) {
+                return;
+            }
+
+            const statusElement = document.getElementById('deleteStatus');
+            statusElement.textContent = 'Deleting...';
+            statusElement.style.color = 'blue';
+            
+            try {
+                const response = await fetch('http://150.136.162.229:8000/number-plates', {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete plates');
+                
+                statusElement.textContent = 'All detected plates deleted!';
+                statusElement.style.color = 'black';
+                fetchAuthorizedPlates();
+            } catch (error) {
+                console.error('Error:', error);
+                statusElement.textContent = 'Error: ' + error.message;
+                statusElement.style.color = 'red';
+            } finally {
+                setTimeout(() => {
+                    statusElement.textContent = '';
+                }, 3000);
+            }
+        }
     </script>
 
 </body>

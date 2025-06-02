@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIGHT CONTROL:Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="Fronx.css">
 </head>
 <body>
@@ -20,9 +21,164 @@
         </a>
       </div>
 
+      <div class="authorized-plates">
+        <h2>Authorized Plates Management</h2>
+        
+        <!-- Add Authorized Plate Form -->
+        <div class="form-group">
+            <label for="plateNumber">Add New Authorized Plate:</label>
+            <input type="text" id="plateNumber" placeholder="License Plate" required>
+            <input type="text" id="ownerName" placeholder="Owner Name (Optional)">
+            <button class="btn btn-add" onclick="addAuthorizedPlate()">
+                <i class="fa fa-plus"></i> Add Plate
+            </button>
+        </div>
+        
+        <!-- Authorized Plates List -->
+        <button class="refresh-btn" onclick="fetchAuthorizedPlates()">
+            <i class="fa fa-refresh"></i> Refresh List
+        </button>
+        <div id="authLoading" style="display: none;">Loading authorized plates...</div>
+        <h3>Current Authorized Plates</h3>
+        <table class="data-table" id="authorizedPlatesTable">
+            <thead>
+                <tr>
+                    <th>Plate Number</th>
+                    <th>Owner Name</th>
+                    <th>Date Added</th>
+                </tr>
+            </thead>
+            <tbody id="authorizedPlatesData">
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Delete All Button -->
+        <div class="form-group">
+            <button class="btn btn-delete" onclick="deleteAllAuthorizedPlates()">
+                <i class="fa fa-trash"></i> Delete All Authorized Plates
+            </button>
+            <span id="deleteStatus"></span>
+        </div>
+        
+    </div>
+
       <script>
         // Get current page filename (e.g., "Configuration.html")
         const currentPage = window.location.pathname.split('/').pop() || 'index.html'; // Default to index.html
+
+        //Section for adding authorized plates
+
+        // Authorized Plates Functions
+        async function fetchAuthorizedPlates() {
+            const loadingElement = document.getElementById('authLoading');
+            const tableBody = document.getElementById('authorizedPlatesData');
+            
+            loadingElement.style.display = 'block';
+            tableBody.innerHTML = '';
+            
+            try {
+                const response = await fetch('http://150.136.162.229:8000/authorized-plates');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const plates = await response.json();
+                
+                if (plates.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3">No authorized plates found</td></tr>';
+                    return;
+                }
+                
+                plates.forEach(plate => {
+                    const row = document.createElement('tr');
+                    const addedDate = new Date(plate.created_at).toLocaleDateString();
+                    row.innerHTML = `
+                        <td>${plate.plate_number}</td>
+                        <td>${plate.owner_name || '-'}</td>
+                        <td>${addedDate}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                tableBody.innerHTML = '<tr><td colspan="3">Error loading authorized plates</td></tr>';
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        }
+
+        async function addAuthorizedPlate() {
+            const plateNumber = document.getElementById('plateNumber').value.trim();
+            const ownerName = document.getElementById('ownerName').value.trim();
+            
+            if (!plateNumber) {
+                alert('Plate number is required!');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://150.136.162.229:8000/authorized-plates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        plate_number: plateNumber,
+                        owner_name: ownerName || null
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to add plate');
+                }
+
+                // Clear form and refresh list
+                document.getElementById('plateNumber').value = '';
+                document.getElementById('ownerName').value = '';
+                fetchAuthorizedPlates();
+                alert('Plate added successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteAllAuthorizedPlates() {
+            if (!confirm('WARNING: This will delete ALL authorized plates. Continue?')) {
+                return;
+            }
+
+            const statusElement = document.getElementById('deleteStatus');
+            statusElement.textContent = 'Deleting...';
+            statusElement.style.color = 'blue';
+            
+            try {
+                const response = await fetch('http://150.136.162.229:8000/authorized-plates', {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete plates');
+                
+                statusElement.textContent = 'All authorized plates deleted!';
+                statusElement.style.color = 'black';
+                fetchAuthorizedPlates();
+            } catch (error) {
+                console.error('Error:', error);
+                statusElement.textContent = 'Error: ' + error.message;
+                statusElement.style.color = 'red';
+            } finally {
+                setTimeout(() => {
+                    statusElement.textContent = '';
+                }, 3000);
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPlateData();
+            fetchAuthorizedPlates();
+        });
+
 
         // Highlight the matching nav link
         document.querySelectorAll('.topnav a').forEach(link => {

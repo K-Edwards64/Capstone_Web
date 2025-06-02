@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIGHT CONTROL:Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="Fronx.css">
 </head>
 <body>
@@ -20,11 +21,14 @@
         </a>
       </div>
 
-
+    <div class="authorized-plates">
     <!-- Area for table -->
     <div style="margin: 20px;">
-        <button class="refresh-btn" onclick="fetchPlateData()">Refresh Data</button>
+        <button class="refresh-btn" onclick="fetchPlateData()">
+            <i class="fa fa-refresh"></i> Refresh Data
+        </button>
         <div id="loading" style="display: none;">Loading data...</div>
+        <h3>Detected Plates</h3>
         <table class="data-table" id="plateTable">
             <thead>
                 <tr>
@@ -39,6 +43,7 @@
                 <!-- Data will be inserted here by JavaScript -->
             </tbody>
         </table>
+        </div>
     </div>
     <!-- Area for table -->
 
